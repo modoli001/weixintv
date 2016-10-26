@@ -1,0 +1,135 @@
+﻿@{
+    ViewBag.Title = "Detail";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var Channels = ViewData["Channels"] as dynamic;
+}
+@model Domain.SYS_CHANNEL
+<style type="text/css">
+    .gray-bg {
+        background-color: white;
+    }
+</style>
+@using (Ajax.BeginForm("Save", null, new AjaxOptions()
+                           {
+                               HttpMethod = "Post",
+                               OnBegin = "SubAjax.Loading",
+                               OnComplete = "SubAjax.Complate",
+                               OnFailure = "SubAjax.Failure",
+                               OnSuccess = "SubAjax.Success"
+                           },
+                               new { @class = "form-horizontal dig-from", @role = "form" }))
+{
+    @Html.HiddenFor(p => p.ID)
+    @Html.HiddenFor(p => p.CreateDate)
+    @Html.HiddenFor(p => p.CreateUser)
+    <div class="wrapper wrapper-content animated fadeInUp">
+        <div class="row">
+            <div class="ibox-detail-title">
+                <i class="fa fa-pencil-square-o"></i>添加/修改频道
+            </div>
+            <div class="ibox-content">
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">频道类型：</label>
+                    <div class="col-sm-10">
+                        <select name="TypeId" class="form-control input-sm  input-s-sm inline">
+                            <option value="0" @(Model.TypeId == 0 ? "selected=\"selected\"" : "")>直播</option>
+                            <option value="1" @(Model.TypeId == 1 ? "selected=\"selected\"" : "")>点播</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="hr-line-dashed"></div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">上级频道：</label>
+                    <div class="col-sm-10">
+                        <select name="ParentID" class="form-control input-sm  inline input-s-lg">
+                            <option value="0" @(Model.ParentID == 0 ? "selected=\"selected\"" : "")>一级栏目</option>
+                            @{
+    foreach (var item in Channels)
+    {
+        <option value="@item.ID" @(Model.ParentID == item.ID ? "selected=\"selected\"" : "")>@Html.Raw(item.Title)</option>
+    }
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="hr-line-dashed"></div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">频道名称：</label>
+                    <div class="col-sm-10">
+                        @Html.TextBoxFor(p => p.Tilte, new { @class = "form-control", @placeholder = "请输入频道名称", @datatype = "*1-100", @nullmsg = "请输入频道名称！", @errormsg = "请输入频道名称！" })
+                    </div>
+                </div>
+                <div class="hr-line-dashed"></div>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label class="col-sm-4 control-label">频道图片：</label>
+                            <div class="col-sm-8">
+                                <div class="input-group">
+                                    @Html.TextBoxFor(p => p.TitleImg, new { @class = "form-control", @placeholder = "请上传频道图片" })
+                                    <span class="input-group-btn"><button type="button" class="btn btn-primary" id="upfile"><i class="fa fa-camera"></i> 上传图片</button></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label class="col-sm-4 control-label"></label>
+                            <div class="col-sm-8">
+                                <img id="imgPreview" src="@Model.TitleImg" style="width:134px;height:92px;" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="hr-line-dashed"></div>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label class="col-sm-4 control-label">显示顺序：</label>
+                            <div class="col-sm-8">
+                                @Html.TextBoxFor(p => p.DisplayOrder, new { @class = "form-control", @placeholder = "请输入频道排序值", @datatype = "n", @nullmsg = "请输入频道排序值", @errormsg = "只能输入数字" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+
+                        <div class="form-group">
+                            <label class="col-sm-4 control-label">是否显示：</label>
+                            <div class="col-sm-8">
+                                <label class="jswitch_line">
+                                    @Html.CheckBoxFor(model => model.IsDisplay, new { @class = "js-switch" })
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="hr-line-dashed"></div>
+                <div class="text-center">
+                    <button class="btn btn-primary btn-save" type="submit"><i class="fa fa-check"></i> <span>确定保存</span></button>
+                    <button class="btn btn-warning" id="btn-dig-close" type="button"><i class="fa fa-reply-all"></i> 取消返回</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+@section scripts{
+    <script type="text/javascript">
+        $(function () {
+            $('.form-horizontal').initValidform();
+            //上传照片
+            $("#upfile").click(function () {
+                dig.upload("", function () {
+                    var retval = this.returnValue;
+                    if (retval != '') {
+                        var json = JSON.parse(retval);
+                        $("#imgPreview").attr("src", json.path);
+                        $("#TitleImg").val(json.path);
+                    } else {
+                        $("#imgPreview").attr("src", "");
+                        $("#TitleImg").val('');
+                    }
+                });
+            });
+        });
+    </script>
+}

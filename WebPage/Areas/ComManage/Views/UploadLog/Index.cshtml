@@ -1,0 +1,85 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@model Common.PageInfo
+<div class="wrapper wrapper-content animated fadeInUp">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>文件上传日志</h5>
+                    <div class="ibox-tools">
+                        <a class="reload-link" style="color: #c4c4c4" href="javascript:dig.reload()" data-toggle="tooltip" data-placement="left" title="刷新">
+                            <i class="fa fa-repeat fa-lg"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="ibox-content">
+                    @using (Ajax.BeginForm("Index", null, new AjaxOptions() { }, new { @id = "form1", @class = "form-horizontal", @method = "get" }))
+                    {
+                        <div class="row">
+                            <div class="col-sm-9">
+                                <label>文件类型：</label>
+                                <select name="fileExt" class=" form-control inline input-sm  input-s" onchange="submit()">
+                                    <option value="" @(ViewData["fileExt"] == null || ViewData["fileExt"].ToString() == "" ? "selected" : "")>全部类型</option> 
+                                    <option value="images" @(ViewData["fileExt"] != null && ViewData["fileExt"].ToString() == "images" ? "selected" : "")>图片文件</option>
+                                    <option value="videos" @(ViewData["fileExt"] != null && ViewData["fileExt"].ToString() == "videos" ? "selected" : "")>视频文件</option>
+                                    <option value="musics" @(ViewData["fileExt"] != null && ViewData["fileExt"].ToString() == "musics" ? "selected" : "")>音频文件</option>
+                                    <option value="docements" @(ViewData["fileExt"] != null && ViewData["fileExt"].ToString() == "docements" ? "selected" : "")>文档文件</option> 
+                                    <option value="others" @(ViewData["fileExt"] != null && ViewData["fileExt"].ToString() == "others" ? "selected" : "")>其它文件</option>                                 
+                                </select>
+                            </div>
+                            <div class="col-sm-3">
+                                <div class="input-group">
+                                    @Html.TextBox("Search", null, new { @class = "input-sm form-control", @placeholder = "请输入查询关键词" })
+                                    <span class="input-group-btn">
+                                        <button type="submit" onclick="submit()" class="btn btn-sm btn-primary"> 搜索</button>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="hr-line-dashed"></div>
+                            <div class="col-sm-12 animated fadeInRight">
+                                <div class="row">
+                                    <div class="col-sm-12" >
+                                        @{foreach (var item in Model.List)
+                                        {
+                                            <div class="file-box">
+                                                <div class="file">
+                                                    <a href="javascript:void(0)" data-id="@item.ID" class="checkselected">
+                                                        <span class="corner"></span>
+                                                        <div class="icon"><i class="@item.ICON"></i></div>
+                                                        <div class="file-name">
+                                                            <div class="fileTitle">@item.UPNEWNAME</div>
+                                                            <br>
+                                                            <small>@item.UPTIME</small>
+                                                            <br>
+                                                            <small style="color:#f50e8d">@item.SIZE</small>
+                                                            <small style="color:#f50e8d;position: absolute;bottom: 10px;right: 5px;">@item.UPOPEATOR</small>
+                                                        </div>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        }
+                                        }                                        
+                                    </div>
+                                </div>
+                            </div>
+                        <div class="row">
+                            <div class="col-sm-6">
+                            </div>
+                            <div class="col-sm-6">
+                                @WebPages.CommonHtmlHelper.PaginationPager(Model.Index, 28, Model.Count, 7, Model.Url)
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts{
+    <script type="text/javascript">$(function () { $(".checkselected").click(function () { dig.addPage("详细记录", "/com/uploadlog/detail?logId=" + $(this).attr("data-id"), 700, 450, function () { }) }) });</script>
+}
+   
+

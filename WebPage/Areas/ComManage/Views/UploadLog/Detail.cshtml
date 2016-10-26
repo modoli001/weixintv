@@ -1,0 +1,74 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@model Domain.COM_UPLOAD
+<style type="text/css">.table tr td:nth-child(2n+1){color:#1ab394;text-align:right;width:100px}
+.gray-bg{background-color:#fff}</style>
+<div class="wrapper wrapper-content animated fadeInUp">
+    <div class="row">
+        <div class="ibox-detail-title">
+            <i class="fa fa-file-text"></i>文件上传记录
+        </div>
+        <div class="ibox-content">
+            <div class="row">
+                <table id="dataTable" class="table table-striped table-hover dataTables-example" style="margin:-16px 0 0 0;">
+                    <tbody>
+                        <tr>
+                            <td>上传时间：</td>
+                            <td> @Model.UPTIME</td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>上传用户：</td>
+                            <td> @Model.UPOPEATOR</td>
+                            <td>上传IP：</td>
+                            <td>@Model.UPFILEIP</td>
+                        </tr>
+                        <tr>
+                            <td>文件大小：</td>
+                            <td>@Html.Raw(Model.UPFILESIZE + Model.UPFILEUNIT)</td>
+                            <td>文件类型：</td>
+                            <td>@Model.UPFILESUFFIX</td>
+                        </tr>
+                        <tr>
+                            <td>新文件名：</td>
+                            <td colspan="3"> @Model.UPNEWNAME</td>
+                        </tr>
+                        <tr>
+                            <td>源文件名：</td>
+                            <td colspan="3"> @Model.UPOLDNAME</td>
+                        </tr>
+                        <tr>
+                            <td>文件路径：</td>
+                            <td colspan="3"> <a href="@Model.UPFILEPATH" target="_blank"> @Model.UPFILEPATH</a></td>
+                        </tr>
+                        <tr>
+                            <td>缩略图：</td>
+                            <td colspan="3"> @Model.UPFILETHUMBNAIL</td>
+                        </tr>
+                        <tr>
+                            <td>站点地址：</td>
+                            <td colspan="3"> @Model.UPFILEURL</td>
+                        </tr>
+                        <tr>
+                            <td>Pad缩略图：</td>
+                            <td colspan="3"> @Model.UPFILETHUMBNAILFORPAD</td>
+                        </tr>
+                        <tr>
+                            <td>手机缩略图：</td>
+                            <td colspan="3"> @Model.UPFILETHUMBNAILFORPHONE</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="hr-line-dashed"></div>
+            <div class="text-center">
+                <button class="btn btn-warning" id="btn-dig-close" type="button"><i class="fa fa-reply-all"></i> 取消返回</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
